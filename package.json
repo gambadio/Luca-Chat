@@ -1,0 +1,25 @@
+{
+  "name": "luca-chat",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js"
+  },
+  "keywords": [
+    "chatbot",
+    "customer-service",
+    "ai"
+  ],
+  "author": "",
+  "license": "ISC",
+  "description": "AI chatbot for product support",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "openai": "^4.76.0",
+    "path": "^0.12.7"
+  }
+}

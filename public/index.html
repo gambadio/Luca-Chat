@@ -1,0 +1,30 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Product Chat</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <div id="chat-orb" class="chat-orb">
+        <div class="orb"></div>
+    </div>
+    
+    <div id="chat-container" class="chat-container hidden">
+        <div class="chat-header">
+            <span>Product Assistant</span>
+            <div class="header-buttons">
+                <button id="restart-chat">↺</button>
+                <button id="minimize-chat">−</button>
+            </div>
+        </div>
+        <div id="chat-messages" class="chat-messages"></div>
+        <div class="chat-input">
+            <textarea id="user-input" placeholder="Type your question..."></textarea>
+            <button id="send-message">Send</button>
+        </div>
+    </div>
+    
+    <script src="/chat.js"></script>
+</body>
+</html>

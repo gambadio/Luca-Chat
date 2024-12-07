@@ -1,0 +1,63 @@
+{
+    "productName": "RoboMaid X2000",
+    "shortDescription": "Your intelligent household assistant with human-like capabilities",
+    "detailedDescription": "The RoboMaid X2000 is a state-of-the-art humanoid robot designed to handle all your household cleaning needs with unprecedented precision and care.",
+    "features": {
+      "cleaning": {
+        "capabilities": [
+          "Deep house cleaning",
+          "Window washing",
+          "Floor mopping and vacuuming",
+          "Dust removal",
+          "Bathroom sanitization",
+          "Kitchen cleaning and organization"
+        ],
+        "technology": "AI-powered dirt detection sensors"
+      },
+      "physical": {
+        "height": "165 cm",
+        "weight": "65 kg",
+        "battery": "72 hours continuous operation",
+        "charging": "2 hours fast charge"
+      },
+      "intelligence": {
+        "ai": "Advanced neural processing unit",
+        "learning": "Adaptive cleaning patterns",
+        "recognition": "Object and space mapping",
+        "communication": "Natural language processing"
+      }
+    },
+    "specifications": {
+      "warranty": "3 years full coverage",
+      "maintenance": "Annual checkup required",
+      "updates": "Monthly software updates",
+      "safety": [
+        "Emergency shutdown system",
+        "Child-safe operations",
+        "Obstacle avoidance",
+        "Water damage protection"
+      ]
+    },
+    "pricing": {
+      "base": 29999.99,
+      "premium": 34999.99,
+      "subscription": {
+        "monthly": 199.99,
+        "yearly": 1999.99
+      }
+    },
+    "faq": [
+      {
+        "question": "How long does it take to learn my home layout?",
+        "answer": "RoboMaid X2000 creates a detailed 3D map of your home within 24 hours of activation."
+      },
+      {
+        "question": "Can it handle pets in the house?",
+        "answer": "Yes, our advanced AI recognizes and safely works around pets, even cleaning pet hair and feeding them if requested."
+      },
+      {
+        "question": "What happens if it malfunctions?",
+        "answer": "24/7 emergency support is included, with same-day repair service in most locations."
+      }
+    ]
+  }
