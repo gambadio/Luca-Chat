@@ -1,4 +1,3 @@
-/* public/styles.css */
 :root {
     --primary-color: #00e5a0;
     --text-color: #333;
@@ -69,7 +68,7 @@
     max-width: 80%;
 }
 
-.bot-message {
+.assistant-message {
     background: #f0f0f0;
     margin-right: auto;
 }

@@ -1,5 +1,5 @@
 {
-  "name": "luca-chat",
+  "name": "robomaid-chat",
   "version": "1.0.0",
   "type": "module",
   "main": "server.js",

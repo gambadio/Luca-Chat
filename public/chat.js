@@ -1,3 +1,4 @@
+// chat.js
 class ChatBot {
     constructor() {
         this.history = [];
@@ -34,7 +35,7 @@ class ChatBot {
         this.input.value = '';
 
         const messageDiv = document.createElement('div');
-        messageDiv.className = 'message bot-message';
+        messageDiv.className = 'message assistant-message';
         this.messagesDiv.appendChild(messageDiv);
 
         try {
@@ -43,38 +44,57 @@ class ChatBot {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     message,
-                    history: this.history.map(msg => ({
-                        role: msg.role,
-                        content: msg.content
-                    }))
+                    history: this.history.slice(-10)
                 })
             });
 
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
             const reader = response.body.getReader();
             let botResponse = '';
+            let isDone = false;
 
-            while (true) {
+            while (!isDone) {
                 const { done, value } = await reader.read();
-                if (done) break;
+                
+                if (done) {
+                    isDone = true;
+                    break;
+                }
 
                 const text = new TextDecoder().decode(value);
                 const lines = text.split('\n');
 
                 for (const line of lines) {
                     if (line.startsWith('data: ')) {
-                        const data = line.slice(5);
-                        if (data === '[DONE]') continue;
+                        const data = line.slice(5).trim();
                         
-                        const { content } = JSON.parse(data);
-                        botResponse += content;
-                        messageDiv.textContent = botResponse;
-                        this.messagesDiv.scrollTop = this.messagesDiv.scrollHeight;
+                        if (data === '[DONE]') {
+                            isDone = true;
+                            break;
+                        }
+
+                        try {
+                            const parsed = JSON.parse(data);
+                            if (parsed.error) throw new Error(parsed.error);
+                            if (parsed.content) {
+                                botResponse += parsed.content;
+                                messageDiv.textContent = botResponse;
+                                this.messagesDiv.scrollTop = this.messagesDiv.scrollHeight;
+                            }
+                        } catch (e) {
+                            console.error('Parse error:', e);
+                            continue;
+                        }
                     }
                 }
             }
 
-            this.history.push({ role: 'assistant', content: botResponse });
-            if (this.history.length > 10) this.history.shift();
+            if (botResponse) {
+                this.history.push({ role: 'assistant', content: botResponse });
+                if (this.history.length > 10) this.history.shift();
+            }
+
         } catch (error) {
             console.error('Error:', error);
             messageDiv.textContent = 'An error occurred. Please try again.';
@@ -102,7 +122,7 @@ class ChatBot {
     }
 
     sendWelcomeMessage() {
-        this.addMessage('bot', 'Hello! How can I help you with our product today?');
+        this.addMessage('assistant', 'Hello! How can I help you with our product today?');
     }
 }
 
