@@ -2,6 +2,7 @@ class ChatBot {
     constructor() {
         this.history = [];
         this.init();
+        this.setupOrbAnimation();
     }
 
     init() {
@@ -11,38 +12,33 @@ class ChatBot {
         this.input = document.getElementById('user-input');
         this.setupEventListeners();
         this.sendWelcomeMessage();
-        this.setupOrbAnimation();
     }
 
     setupOrbAnimation() {
-        const orb = document.querySelector('.orb');
         let glowIntensity = 0;
         let increasing = true;
-    
+        
         setInterval(() => {
             if (increasing) {
-                glowIntensity += 0.05;
-                if (glowIntensity >= 1) {
-                    increasing = false;
-                }
+                glowIntensity += 2;
+                if (glowIntensity >= 30) increasing = false;
             } else {
-                glowIntensity -= 0.05;
-                if (glowIntensity <= 0) {
-                    increasing = true;
-                }
+                glowIntensity -= 2;
+                if (glowIntensity <= 20) increasing = true;
             }
-    
-            // Apply box-shadow directly around the resized orb
-            orb.style.boxShadow = `0 0 ${10 * glowIntensity}px rgba(108, 92, 231, ${0.3 + (glowIntensity * 0.4)})`;
             
+            this.orb.querySelector('.orb').style.boxShadow = 
+                `0 0 ${glowIntensity}px rgba(110, 59, 255, 0.${Math.floor(glowIntensity/10)})`;
         }, 50);
     }
-    
 
     setupEventListeners() {
+        // Chat toggle events
         this.orb.addEventListener('click', () => this.toggleChat(true));
         document.getElementById('minimize-chat').addEventListener('click', () => this.toggleChat(false));
         document.getElementById('restart-chat').addEventListener('click', () => this.restartChat());
+        
+        // Message sending events
         document.getElementById('send-message').addEventListener('click', () => this.sendMessage());
         this.input.addEventListener('keypress', (e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
@@ -51,33 +47,45 @@ class ChatBot {
             }
         });
 
-        // Add input focus animation
+        // Input field animations
         this.input.addEventListener('focus', () => {
-            this.input.style.boxShadow = '0 0 10px rgba(108, 92, 231, 0.3)';
+            this.input.style.borderColor = 'rgba(110, 59, 255, 0.5)';
+            this.input.style.boxShadow = '0 0 10px rgba(110, 59, 255, 0.2)';
         });
 
         this.input.addEventListener('blur', () => {
+            this.input.style.borderColor = 'rgba(110, 59, 255, 0.3)';
             this.input.style.boxShadow = 'none';
         });
+
+        /* Auto-resize textarea
+        this.input.addEventListener('input', () => {
+            this.input.style.height = '40px';
+            this.input.style.height = `${this.input.scrollHeight}px`;
+        }); */
     }
 
     async sendMessage() {
         const message = this.input.value.trim();
         if (!message) return;
 
+        // Add user message
         this.addMessage('user', message);
         this.input.value = '';
-        this.input.style.height = '40px'; // Reset height after sending
+        this.input.style.height = '40px';
 
+        // Create assistant message container
         const messageDiv = document.createElement('div');
         messageDiv.className = 'message assistant-message';
+        
+        // Add typing animation
+        const typingDots = document.createElement('div');
+        typingDots.className = 'typing-animation';
+        typingDots.innerHTML = '<span>.</span><span>.</span><span>.</span>';
+        messageDiv.appendChild(typingDots);
+        
         this.messagesDiv.appendChild(messageDiv);
-
-        // Add typing indicator
-        const typingIndicator = document.createElement('div');
-        typingIndicator.className = 'typing-indicator';
-        typingIndicator.textContent = '...';
-        messageDiv.appendChild(typingIndicator);
+        this.messagesDiv.scrollTop = this.messagesDiv.scrollHeight;
 
         try {
             const response = await fetch('/api/chat', {
@@ -95,8 +103,8 @@ class ChatBot {
             let botResponse = '';
             let isDone = false;
 
-            // Remove typing indicator
-            messageDiv.removeChild(typingIndicator);
+            // Remove typing animation
+            messageDiv.removeChild(typingDots);
 
             while (!isDone) {
                 const { done, value } = await reader.read();
@@ -141,11 +149,14 @@ class ChatBot {
 
         } catch (error) {
             console.error('Error:', error);
-            messageDiv.textContent = 'An error occurred. Please try again.';
-            messageDiv.style.color = '#ff6b6b';
+            messageDiv.innerHTML = `
+                <div class="error-message">
+                    An error occurred. Please try again.
+                    <button onclick="this.parentElement.parentElement.remove()">✕</button>
+                </div>
+            `;
         }
 
-        // Ensure scroll to bottom after complete response
         this.messagesDiv.scrollTop = this.messagesDiv.scrollHeight;
     }
 
@@ -155,46 +166,66 @@ class ChatBot {
         messageDiv.className = `message ${role}-message`;
         messageDiv.textContent = content;
         
-        // Add animation class
+        // Add entrance animation
         messageDiv.style.opacity = '0';
         messageDiv.style.transform = 'translateY(20px)';
         
         this.messagesDiv.appendChild(messageDiv);
         
         // Trigger animation
-        setTimeout(() => {
+        requestAnimationFrame(() => {
             messageDiv.style.transition = 'all 0.3s ease';
             messageDiv.style.opacity = '1';
             messageDiv.style.transform = 'translateY(0)';
-        }, 50);
+        });
         
         this.messagesDiv.scrollTop = this.messagesDiv.scrollHeight;
     }
 
     toggleChat(show) {
-        this.orb.classList.toggle('hidden', show);
-        this.container.classList.toggle('hidden', !show);
-        
+        // Add transition class for smooth animation
+        this.container.style.transition = 'all 0.3s ease';
+        this.orb.style.transition = 'all 0.3s ease';
+
         if (show) {
-            this.container.style.opacity = '0';
-            this.container.style.transform = 'translateY(20px)';
+            this.orb.style.opacity = '0';
+            this.orb.style.transform = 'scale(0.8)';
             setTimeout(() => {
-                this.container.style.transition = 'all 0.3s ease';
-                this.container.style.opacity = '1';
-                this.container.style.transform = 'translateY(0)';
-            }, 50);
+                this.orb.classList.add('hidden');
+                this.container.classList.remove('hidden');
+                requestAnimationFrame(() => {
+                    this.container.style.opacity = '1';
+                    this.container.style.transform = 'translateY(0) scale(1)';
+                });
+            }, 300);
+        } else {
+            this.container.style.opacity = '0';
+            this.container.style.transform = 'translateY(20px) scale(0.9)';
+            setTimeout(() => {
+                this.container.classList.add('hidden');
+                this.orb.classList.remove('hidden');
+                requestAnimationFrame(() => {
+                    this.orb.style.opacity = '1';
+                    this.orb.style.transform = 'scale(1)';
+                });
+            }, 300);
         }
     }
 
     restartChat() {
         // Add fade-out animation
         this.messagesDiv.style.opacity = '0';
+        this.messagesDiv.style.transform = 'translateY(20px)';
+        
         setTimeout(() => {
             this.history = [];
             this.messagesDiv.innerHTML = '';
+            
             // Add fade-in animation
-            this.messagesDiv.style.transition = 'opacity 0.3s ease';
+            this.messagesDiv.style.transition = 'all 0.3s ease';
             this.messagesDiv.style.opacity = '1';
+            this.messagesDiv.style.transform = 'translateY(0)';
+            
             this.sendWelcomeMessage();
         }, 300);
     }
@@ -205,15 +236,53 @@ class ChatBot {
 }
 
 // Initialize chatbot
-new ChatBot();
+const chatbot = new ChatBot();
 
-// Add some global error handling
+// Add global error handling
 window.onerror = function(msg, url, lineNo, columnNo, error) {
     console.error('Global error:', {msg, url, lineNo, columnNo, error});
     return false;
 };
 
-// Handle promise rejections
 window.addEventListener('unhandledrejection', function(event) {
     console.error('Unhandled promise rejection:', event.reason);
 });
+
+// Add some CSS for the typing animation
+const style = document.createElement('style');
+style.textContent = `
+    .typing-animation {
+        display: flex;
+        gap: 4px;
+        padding: 0 4px;
+    }
+    
+    .typing-animation span {
+        animation: typing 1.4s infinite;
+        opacity: 0.3;
+    }
+    
+    .typing-animation span:nth-child(2) { animation-delay: 0.2s; }
+    .typing-animation span:nth-child(3) { animation-delay: 0.4s; }
+    
+    @keyframes typing {
+        0%, 100% { opacity: 0.3; }
+        50% { opacity: 1; }
+    }
+    
+    .error-message {
+        color: #ff6b6b;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .error-message button {
+        background: none;
+        border: none;
+        color: #ff6b6b;
+        cursor: pointer;
+        padding: 0 4px;
+    }
+`;
+document.head.appendChild(style);

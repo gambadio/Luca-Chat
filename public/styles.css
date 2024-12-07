@@ -126,10 +126,7 @@
     background: rgba(255, 255, 255, 0.05);
     color: var(--text-color);
     font-family: var(--font-family);
-}
-
-.chat-input textarea::placeholder {
-    color: rgba(255, 255, 255, 0.5);
+    overflow-y: auto;
 }
 
 .chat-input button {
@@ -142,6 +139,11 @@
     transition: transform 0.2s ease;
     font-family: var(--font-family);
 }
+
+.chat-input textarea::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
 
 .chat-input button:hover {
     transform: translateY(-1px);
