@@ -1,4 +1,3 @@
-// server.js
 import express from 'express';
 import OpenAI from 'openai';
 import cors from 'cors';
@@ -14,8 +13,18 @@ const __dirname = dirname(__filename);
 dotenv.config();
 
 const app = express();
-const port = 8080;
+const port = process.env.PORT || 8080;
 
+// Middleware
+app.use(express.json());
+app.use(express.static('public'));
+app.use(cors({
+    origin: process.env.ALLOWED_DOMAINS ? process.env.ALLOWED_DOMAINS.split(',') : '*',
+    methods: ['GET', 'POST'],
+    credentials: true
+}));
+
+// Load product info
 let productInfo;
 try {
     productInfo = JSON.parse(await fs.readFile(path.join(__dirname, 'data', 'product-info.json'), 'utf-8'));
@@ -44,17 +53,12 @@ const openai = new OpenAI({
     baseURL: "https://openrouter.ai/api/v1",
     apiKey: process.env.OPENROUTER_API_KEY,
     defaultHeaders: {
-        "HTTP-Referer": process.env.ALLOWED_DOMAIN || "http://localhost:8080",
+        "HTTP-Referer": process.env.ALLOWED_DOMAINS || "http://localhost:8080",
         "X-Title": "RoboMaid Assistant"
     }
 });
 
-app.use(express.json());
-app.use(express.static('public'));
-app.use(cors({
-    origin: process.env.ALLOWED_DOMAIN || 'http://localhost:8080'
-}));
-
+// Routes
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
@@ -105,15 +109,20 @@ app.get('/health', (req, res) => {
     res.status(200).json({ status: 'ok' });
 });
 
+// Error handling middleware
 app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).json({ error: 'Something broke!' });
 });
 
-app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}`);
-});
+// Start server in development, export app for Vercel
+if (process.env.NODE_ENV !== 'production') {
+    app.listen(port, () => {
+        console.log(`Server running at http://localhost:${port}`);
+    });
+}
 
+// Global error handlers
 process.on('unhandledRejection', (error) => {
     console.error('Unhandled Rejection:', error);
 });
@@ -121,3 +130,5 @@ process.on('unhandledRejection', (error) => {
 process.on('uncaughtException', (error) => {
     console.error('Uncaught Exception:', error);
 });
+
+export default app;
