@@ -17,7 +17,7 @@ const port = process.env.PORT || 8080;
 
 // Middleware
 app.use(express.json());
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors({
     origin: process.env.ALLOWED_DOMAINS ? process.env.ALLOWED_DOMAINS.split(',') : '*',
     methods: ['GET', 'POST'],
