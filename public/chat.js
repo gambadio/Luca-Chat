@@ -231,7 +231,7 @@ class ChatBot {
     }
 
     sendWelcomeMessage() {
-        this.addMessage('assistant', 'Hello! How can I help you with our product today?');
+        this.addMessage('assistant', 'Welcome to Green Hockey! How can I assist you today?');
     }
 }
 
@@ -260,6 +260,7 @@ style.textContent = `
     .typing-animation span {
         animation: typing 1.4s infinite;
         opacity: 0.3;
+        color: var(--primary-color);
     }
     
     .typing-animation span:nth-child(2) { animation-delay: 0.2s; }
@@ -271,7 +272,7 @@ style.textContent = `
     }
     
     .error-message {
-        color: #ff6b6b;
+        color: #ff3333;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -280,9 +281,10 @@ style.textContent = `
     .error-message button {
         background: none;
         border: none;
-        color: #ff6b6b;
+        color: #ff3333;
         cursor: pointer;
         padding: 0 4px;
     }
 `;
+
 document.head.appendChild(style);

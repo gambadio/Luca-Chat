@@ -24,37 +24,24 @@ app.use(cors({
     credentials: true
 }));
 
-// Load product info
-let productInfo;
+// Load system prompt
+let systemPrompt;
 try {
-    productInfo = JSON.parse(await fs.readFile(path.join(__dirname, 'data', 'product-info.json'), 'utf-8'));
+    systemPrompt = {
+        role: "system",
+        content: await fs.readFile(path.join(__dirname, 'data', 'system-prompt.txt'), 'utf-8')
+    };
 } catch (error) {
-    console.error('Error reading product info:', error);
-    productInfo = {};
+    console.error('Error: System prompt file could not be read:', error);
+    process.exit(1);
 }
-
-const systemPrompt = {
-    role: "system",
-    content: `You are RoboMaid Assistant, a helpful product specialist for the RoboMaid X2000. 
-    Your role is to assist customers with questions about our robotic house maid.
-    
-    Product Information:
-    ${JSON.stringify(productInfo)}
-    
-    Guidelines:
-    - Be friendly and professional
-    - Only discuss RoboMaid X2000 related topics
-    - If asked about unrelated topics, politely redirect to RoboMaid features
-    - Don't make up information not in the product details
-    - Keep responses concise and focused`
-};
 
 const openai = new OpenAI({
     baseURL: "https://openrouter.ai/api/v1",
     apiKey: process.env.OPENROUTER_API_KEY,
     defaultHeaders: {
         "HTTP-Referer": process.env.ALLOWED_DOMAINS || "http://localhost:8080",
-        "X-Title": "RoboMaid Assistant"
+        "X-Title": "Green Hockey Assistant"
     }
 });
 
@@ -82,11 +69,11 @@ app.post('/api/chat', async (req, res) => {
         res.setHeader('Connection', 'keep-alive');
 
         const stream = await openai.chat.completions.create({
-            model: 'anthropic/claude-3-sonnet',
+            model: 'anthropic/claude-3.5-sonnet',
             messages: formattedMessages,
             stream: true,
             max_tokens: 2000,
-            temperature: 0.7
+            temperature: 0.2
         });
 
         for await (const chunk of stream) {
