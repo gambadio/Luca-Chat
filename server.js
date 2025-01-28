@@ -118,9 +118,8 @@ app.use(cors({
             callback(new Error('Not allowed by CORS'));
         }
     },
-    credentials: true,  // Important for handling credentials
-    methods: ['GET', 'POST'],  // Specify allowed methods
-    allowedHeaders: ['Content-Type', 'X-Access-Token']  // Specify allowed headers
+    methods: ['GET', 'POST', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'X-Access-Token']
 }));
 
 

@@ -16,12 +16,14 @@ class ChatBot {
         const allowedDomains = [
             'https://luca-chat.vercel.app',
             'http://localhost:8080',
-            'http://127.0.0.1:8080'
+            'http://127.0.0.1:8080',
+            'http://127.0.0.1:3002',
+            'http://localhost:3002'
         ];
         
         const currentDomain = window.location.origin;
         
-        // Allow localhost in development
+        // Allow localhost and 127.0.0.1 in development
         if (currentDomain.includes('localhost') || currentDomain.includes('127.0.0.1')) {
             return true;
         }
@@ -103,14 +105,14 @@ class ChatBot {
         this.messagesDiv.scrollTop = this.messagesDiv.scrollHeight;
 
         try {
-            // Get the base URL
-            const baseUrl = window.location.origin;
+            const baseUrl = window.location.origin.includes('3002') ? 
+                'http://localhost:8080' : window.location.origin;
             
             const response = await fetch(`${baseUrl}/api/chat`, {
                 method: 'POST',
                 headers: { 
                     'Content-Type': 'application/json',
-                    'X-Access-Token': this.token || 'dev-token' // Use dev-token in development
+                    'X-Access-Token': this.token || 'dev-token'
                 },
                 body: JSON.stringify({
                     message,

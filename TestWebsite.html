@@ -48,49 +48,44 @@
         </div>
     </div>
 
-    // ... existing code ...
     <!-- Secure Chatbot Integration -->
     <script>
         (function(w,d,s,o,f,js,fjs){
-            // Update this to match your server URL
-            const baseUrl = 'http://localhost:8080';
+            const baseUrl = 'http://localhost:8080'; // Development server URL
             
             // Get verification token
             fetch(`${baseUrl}/verify-domain`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
-                },
-                credentials: 'include' // Add this line to include credentials
+                }
             })
             .then(response => response.json())
             .then(data => {
                 w.chatToken = data.token || 'dev-token';
                 
                 // Load chat assets
-                fetch(`${baseUrl}/chat-assets`, {
-                    credentials: 'include' // Add this line to include credentials
-                })
-                    .then(response => response.json())
-                    .then(assets => {
-                        // Load CSS
-                        const link = document.createElement('link');
-                        link.rel = 'stylesheet';
-                        link.href = `${baseUrl}${assets.cssUrl}`;
-                        document.head.appendChild(link);
-                        
-                        // Load JS
-                        w['MyChat']=o;w[o]=w[o]||function(){
-                            (w[o].q=w[o].q||[]).push(arguments)};
-                        js=d.createElement(s);
-                        js.id='chatbot-script';
-                        js.src=`${baseUrl}${assets.jsUrl}`;
-                        js.async=1;
-                        fjs=d.getElementsByTagName(s)[0];
-                        fjs.parentNode.insertBefore(js,fjs);
-                    });
+                return fetch(`${baseUrl}/chat-assets`);
             })
-            .catch(error => console.error('Verification failed:', error));
+            .then(response => response.json())
+            .then(assets => {
+                // Load CSS
+                const link = document.createElement('link');
+                link.rel = 'stylesheet';
+                link.href = `${baseUrl}${assets.cssUrl}`;
+                document.head.appendChild(link);
+                
+                // Load JS
+                w['MyChat']=o;w[o]=w[o]||function(){
+                    (w[o].q=w[o].q||[]).push(arguments)};
+                js=d.createElement(s);
+                js.id='chatbot-script';
+                js.src=`${baseUrl}${assets.jsUrl}`;
+                js.async=1;
+                fjs=d.getElementsByTagName(s)[0];
+                fjs.parentNode.insertBefore(js,fjs);
+            })
+            .catch(error => console.error('Initialization failed:', error));
         }(window,document,'script','ChatBot'));
     </script>
 
