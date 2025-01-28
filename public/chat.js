@@ -1,11 +1,37 @@
 class ChatBot {
     constructor() {
+        // Verify domain on initialization
+        if (!this.verifyDomain()) {
+            console.error('Unauthorized domain');
+            return;
+        }
+        
         this.history = [];
+        this.token = window.chatToken; // Get token from window object
         this.init();
         this.setupOrbAnimation();
     }
 
+    verifyDomain() {
+        const allowedDomains = [
+            'https://luca-chat.vercel.app',
+            'http://localhost:8080',
+            'http://127.0.0.1:8080'
+        ];
+        
+        const currentDomain = window.location.origin;
+        
+        // Allow localhost in development
+        if (currentDomain.includes('localhost') || currentDomain.includes('127.0.0.1')) {
+            return true;
+        }
+        
+        return allowedDomains.includes(currentDomain);
+    }
+
     init() {
+        if (!this.verifyDomain()) return;
+
         this.orb = document.getElementById('chat-orb');
         this.container = document.getElementById('chat-container');
         this.messagesDiv = document.getElementById('chat-messages');
@@ -33,12 +59,10 @@ class ChatBot {
     }
 
     setupEventListeners() {
-        // Chat toggle events
         this.orb.addEventListener('click', () => this.toggleChat(true));
         document.getElementById('minimize-chat').addEventListener('click', () => this.toggleChat(false));
         document.getElementById('restart-chat').addEventListener('click', () => this.restartChat());
         
-        // Message sending events
         document.getElementById('send-message').addEventListener('click', () => this.sendMessage());
         this.input.addEventListener('keypress', (e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
@@ -47,7 +71,6 @@ class ChatBot {
             }
         });
 
-        // Input field animations
         this.input.addEventListener('focus', () => {
             this.input.style.borderColor = 'rgba(110, 59, 255, 0.5)';
             this.input.style.boxShadow = '0 0 10px rgba(110, 59, 255, 0.2)';
@@ -57,28 +80,20 @@ class ChatBot {
             this.input.style.borderColor = 'rgba(110, 59, 255, 0.3)';
             this.input.style.boxShadow = 'none';
         });
-
-        /* Auto-resize textarea
-        this.input.addEventListener('input', () => {
-            this.input.style.height = '40px';
-            this.input.style.height = `${this.input.scrollHeight}px`;
-        }); */
     }
 
     async sendMessage() {
+        if (!this.verifyDomain()) return;
+
         const message = this.input.value.trim();
         if (!message) return;
 
-        // Add user message
         this.addMessage('user', message);
         this.input.value = '';
-        this.input.style.height = '40px';
 
-        // Create assistant message container
         const messageDiv = document.createElement('div');
         messageDiv.className = 'message assistant-message';
         
-        // Add typing animation
         const typingDots = document.createElement('div');
         typingDots.className = 'typing-animation';
         typingDots.innerHTML = '<span>.</span><span>.</span><span>.</span>';
@@ -88,9 +103,15 @@ class ChatBot {
         this.messagesDiv.scrollTop = this.messagesDiv.scrollHeight;
 
         try {
-            const response = await fetch('/api/chat', {
+            // Get the base URL
+            const baseUrl = window.location.origin;
+            
+            const response = await fetch(`${baseUrl}/api/chat`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'X-Access-Token': this.token || 'dev-token' // Use dev-token in development
+                },
                 body: JSON.stringify({
                     message,
                     history: this.history.slice(-10)
@@ -103,7 +124,6 @@ class ChatBot {
             let botResponse = '';
             let isDone = false;
 
-            // Remove typing animation
             messageDiv.removeChild(typingDots);
 
             while (!isDone) {
@@ -166,13 +186,11 @@ class ChatBot {
         messageDiv.className = `message ${role}-message`;
         messageDiv.textContent = content;
         
-        // Add entrance animation
         messageDiv.style.opacity = '0';
         messageDiv.style.transform = 'translateY(20px)';
         
         this.messagesDiv.appendChild(messageDiv);
         
-        // Trigger animation
         requestAnimationFrame(() => {
             messageDiv.style.transition = 'all 0.3s ease';
             messageDiv.style.opacity = '1';
@@ -183,7 +201,6 @@ class ChatBot {
     }
 
     toggleChat(show) {
-        // Add transition class for smooth animation
         this.container.style.transition = 'all 0.3s ease';
         this.orb.style.transition = 'all 0.3s ease';
 
@@ -213,7 +230,6 @@ class ChatBot {
     }
 
     restartChat() {
-        // Add fade-out animation
         this.messagesDiv.style.opacity = '0';
         this.messagesDiv.style.transform = 'translateY(20px)';
         
@@ -221,7 +237,6 @@ class ChatBot {
             this.history = [];
             this.messagesDiv.innerHTML = '';
             
-            // Add fade-in animation
             this.messagesDiv.style.transition = 'all 0.3s ease';
             this.messagesDiv.style.opacity = '1';
             this.messagesDiv.style.transform = 'translateY(0)';
@@ -238,7 +253,7 @@ class ChatBot {
 // Initialize chatbot
 const chatbot = new ChatBot();
 
-// Add global error handling
+// Global error handling
 window.onerror = function(msg, url, lineNo, columnNo, error) {
     console.error('Global error:', {msg, url, lineNo, columnNo, error});
     return false;
@@ -247,42 +262,3 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
 window.addEventListener('unhandledrejection', function(event) {
     console.error('Unhandled promise rejection:', event.reason);
 });
-
-// Add some CSS for the typing animation
-const style = document.createElement('style');
-style.textContent = `
-    .typing-animation {
-        display: flex;
-        gap: 4px;
-        padding: 0 4px;
-    }
-    
-    .typing-animation span {
-        animation: typing 1.4s infinite;
-        opacity: 0.3;
-    }
-    
-    .typing-animation span:nth-child(2) { animation-delay: 0.2s; }
-    .typing-animation span:nth-child(3) { animation-delay: 0.4s; }
-    
-    @keyframes typing {
-        0%, 100% { opacity: 0.3; }
-        50% { opacity: 1; }
-    }
-    
-    .error-message {
-        color: #ff6b6b;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-    
-    .error-message button {
-        background: none;
-        border: none;
-        color: #ff6b6b;
-        cursor: pointer;
-        padding: 0 4px;
-    }
-`;
-document.head.appendChild(style);

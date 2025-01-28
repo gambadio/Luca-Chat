@@ -16,10 +16,14 @@
   "license": "ISC",
   "description": "AI chatbot for product support",
   "dependencies": {
+    "clean-css": "^5.3.3",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
-    "openai": "^4.76.0",
-    "path": "^0.12.7"
+    "express-rate-limit": "^7.5.0",
+    "javascript-obfuscator": "^4.1.1",
+    "openai": "^4.80.1",
+    "path": "^0.12.7",
+    "uglify-js": "^3.19.3"
   }
 }

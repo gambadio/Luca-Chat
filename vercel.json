@@ -1,0 +1,14 @@
+{
+  "env": {
+    "OPENROUTER_API_KEY": "@openrouter_api_key",
+    "ALLOWED_DOMAINS": "https://luca-chat.vercel.app,http://localhost:8080,http://127.0.0.1:8080",
+    "NODE_ENV": "production"
+  },
+  "build": {
+    "env": {
+      "OPENROUTER_API_KEY": "@openrouter_api_key",
+      "ALLOWED_DOMAINS": "https://luca-chat.vercel.app,http://localhost:8080,http://127.0.0.1:8080",
+      "NODE_ENV": "production"
+    }
+  }
+} 
