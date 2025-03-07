@@ -1,15 +1,17 @@
-# Luca Chat - AI Chatbot Integration
+# Green Hockey Assistant - AI Chatbot Integration
 
-A powerful and customizable AI chatbot integration that can be easily embedded into any website. Built with Node.js and powered by OpenRouter's AI models, this project provides a seamless chat experience for your users.
+A modern and responsive AI chatbot integration for Green Hockey's customer support. Built with Node.js and powered by OpenRouter's AI models, this chatbot provides seamless product assistance and sustainability-focused customer service.
 
 ## 🌟 Features
 
-- Modern and responsive chat interface
-- Easy website integration
-- Powered by state-of-the-art AI models through OpenRouter
-- Rate limiting and security features
-- Customizable styling
-- Asset protection and obfuscation
+- Modern and responsive chat interface with sleek animations
+- Floating chat orb with pulsing animation
+- Powered by Claude 3.5 Sonnet through OpenRouter
+- Focus on sustainability and environmental responsibility
+- Customizable styling with CSS variables
+- Streaming responses for real-time interaction
+- Error handling and recovery
+- CORS configuration for security
 
 ## 🚀 Getting Started
 
@@ -17,14 +19,14 @@ A powerful and customizable AI chatbot integration that can be easily embedded i
 
 - Node.js (v14 or higher)
 - An OpenRouter API key
-- A Vercel account (for deployment)
+- A domain for deployment (optional)
 
 ### Local Development
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/luca-chat.git
-cd luca-chat
+git clone https://github.com/yourusername/green-hockey-assistant.git
+cd green-hockey-assistant
 ```
 
 2. Install dependencies:
@@ -35,8 +37,9 @@ npm install
 3. Create a `.env` file in the root directory with the following variables:
 ```env
 OPENROUTER_API_KEY=your_api_key_here
-PORT=3000
+PORT=8080
 NODE_ENV=development
+ALLOWED_DOMAINS=http://localhost:8080
 ```
 
 4. Start the development server:
@@ -44,7 +47,7 @@ NODE_ENV=development
 npm run dev
 ```
 
-The server will start at `http://localhost:3000`
+The server will start at `http://localhost:8080`
 
 ## 🔑 Getting an OpenRouter API Key
 
@@ -54,26 +57,32 @@ The server will start at `http://localhost:3000`
 4. Generate a new API key
 5. Add the API key to your `.env` file
 
-## 🌐 Deploying to Vercel
+## 🌐 Deploying to Production
 
-1. Fork this repository to your GitHub account
-2. Create a new project on [Vercel](https://vercel.com)
-3. Connect your GitHub repository to Vercel
-4. Add the following environment variables in your Vercel project settings:
+1. Set up your hosting environment (e.g., Vercel, Heroku, etc.)
+2. Add the following environment variables:
    - `OPENROUTER_API_KEY`
    - `NODE_ENV=production`
-5. Deploy the project
+   - `ALLOWED_DOMAINS` (comma-separated list of allowed domains)
+3. Deploy the project
 
 ## 💻 Website Integration
 
 Add the chatbot to your website by including the following code:
 
 ```html
-<script src="https://your-vercel-deployment-url/chat.js"></script>
-<link rel="stylesheet" href="https://your-vercel-deployment-url/styles.css">
-
-<!-- Add the chat container wherever you want the chat to appear -->
-<div id="chat-container"></div>
+<script>
+(function(w,d,s,o,f,js,fjs){
+    w['MyChat']=o;w[o]=w[o]||function(){
+        (w[o].q=w[o].q||[]).push(arguments)};
+    js=d.createElement(s),fjs=d.getElementsByTagName(s)[0];
+    js.id='chatbot-script';
+    js.src='https://your-deployment-url/chat.js';
+    js.async=1;
+    fjs.parentNode.insertBefore(js,fjs);
+}(window,document,'script','ChatBot'));
+</script>
+<link rel="stylesheet" href="https://your-deployment-url/styles.css">
 ```
 
 ### Customizing the Chat Style
@@ -82,23 +91,33 @@ You can customize the chat appearance by overriding the CSS variables in your we
 
 ```css
 :root {
-  --chat-primary-color: #007bff;
-  --chat-background: #ffffff;
-  --chat-text-color: #333333;
-  /* Add more custom variables as needed */
+    --primary-color: #00FF00;
+    --secondary-color: #006600;
+    --text-color: #ffffff;
+    --bg-color: rgba(0, 0, 0, 0.95);
+    --shadow: 0 2px 20px rgba(0, 255, 0, 0.2);
+    --font-family: 'Space Grotesk', sans-serif;
 }
 ```
 
 ## 🛡️ Security Features
 
-- Rate limiting to prevent abuse
-- Asset protection and obfuscation
-- CORS configuration
+- CORS configuration for domain protection
 - Environment variable protection
+- Error handling and recovery
+- Rate limiting support (configurable)
 
 ## 📝 License
 
-This project is licensed under the ISC License - see the LICENSE file for details.
+This project is available under a dual license:
+
+### Personal Use
+Free to use and modify for personal, non-commercial purposes.
+
+### Commercial Use
+For company or commercial use, please contact the Green Hockey team at shop@green.hockey to obtain a commercial license. Any commercial use without a proper license agreement is strictly prohibited.
+
+All rights reserved. © Green Hockey
 
 ## 🤝 Contributing
 
@@ -115,4 +134,4 @@ If you find a bug, please create an issue in the GitHub repository with:
 
 ## 📞 Support
 
-For support or questions, please create an issue in the GitHub repository.
+For support or questions, please create an issue in the GitHub repository or contact the Green Hockey team at shop@green.hockey.
