@@ -117,7 +117,7 @@ Free to use and modify for personal, non-commercial purposes.
 ### Commercial Use
 For company or commercial use, please contact me.
 
-All rights reserved. © Green Hockey
+All rights reserved. 
 
 ## 🤝 Contributing
 
