@@ -1,4 +1,4 @@
-# Green Hockey Assistant - AI Chatbot Integration
+# Luca Chat - AI Chatbot Integration
 
 A modern and responsive AI chatbot integration for Green Hockey's customer support. Built with Node.js and powered by OpenRouter's AI models, this chatbot provides seamless product assistance and sustainability-focused customer service.
 
@@ -115,7 +115,7 @@ This project is available under a dual license:
 Free to use and modify for personal, non-commercial purposes.
 
 ### Commercial Use
-For company or commercial use, please contact the Green Hockey team at shop@green.hockey to obtain a commercial license. Any commercial use without a proper license agreement is strictly prohibited.
+For company or commercial use, please contact me.
 
 All rights reserved. © Green Hockey
 
@@ -132,6 +132,3 @@ If you find a bug, please create an issue in the GitHub repository with:
 4. Actual behavior
 5. Screenshots (if applicable)
 
-## 📞 Support
-
-For support or questions, please create an issue in the GitHub repository or contact the Green Hockey team at shop@green.hockey.
