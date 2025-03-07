@@ -25,8 +25,8 @@ A modern and responsive AI chatbot integration for Green Hockey's customer suppo
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/green-hockey-assistant.git
-cd green-hockey-assistant
+git clone https://github.com/gambadio/Luca-Chat
+
 ```
 
 2. Install dependencies:
