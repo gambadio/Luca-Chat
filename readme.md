@@ -1,6 +1,6 @@
 # Luca Chat - AI Chatbot Integration
 
-A modern and responsive AI chatbot integration for Green Hockey's customer support. Built with Node.js and powered by OpenRouter's AI models, this chatbot provides seamless product assistance and sustainability-focused customer service.
+A modern and responsive AI chatbot integration for customer support. Built with Node.js and powered by OpenRouter's AI models, this chatbot provides seamless product assistance and sustainability-focused customer service.
 
 ## 🌟 Features
 
